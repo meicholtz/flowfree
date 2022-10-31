@@ -35,6 +35,7 @@ def play(rows, cols, n):
 
     canvas = tk.Canvas(gui, width=WIDTH, height=HEIGHT)
     canvas.configure(background=COLORS['background'])
+    canvas.setvar("isclicked", False)  # flag for mouse clicks
     canvas.pack()
 
     # Draw stuff
@@ -44,6 +45,8 @@ def play(rows, cols, n):
     # Add events
     gui.bind("<Escape>", events.endgame)
     gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, canvas, current_board, endpoints, flow_start))
+    gui.bind("<Motion>", lambda evt: events.mousedrag(evt, canvas, current_board))
+    gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, canvas))
 
     # Run the game
     gui.mainloop()
