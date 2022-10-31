@@ -6,6 +6,7 @@ import draw
 from params import *
 import pdb
 import tkinter as tk
+import utils
 
 
 parser = argparse.ArgumentParser(description="Play Flow Free in Python")
@@ -19,6 +20,10 @@ args = parser.parse_args()
 
 def play(rows, cols, n):
     '''Play game with grid of size (rows, cols) and n flows.'''
+    # Determine which board will be attempted
+    solution = utils.getboard(rows, cols, n)
+    initial_board = utils.getendpoints(solution)
+
     # Setup game interface
     gui = tk.Tk()
     gui.title("Flow Free")
@@ -38,11 +43,6 @@ def play(rows, cols, n):
     # Run the game
     gui.mainloop()
     print('Thanks for playing!')
-
-
-def addgrid(root, canvas, rows, cols):
-    '''Add grid lines to GUI based on requested size.'''
-    pass
 
 
 def endgame(event):
