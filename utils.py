@@ -1,5 +1,5 @@
 # utils.py
-# Utility functions for the game.
+# Utility functions for the Flow Free game.
 
 from copy import deepcopy
 import pdb
@@ -29,7 +29,11 @@ def count_matching_adjacent(board, row, col):
         matching += 1
     
     return matching
-    
+
+def cutflow(board, row, col, flow_start):
+    '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
+    Determine how to cut it based on the known flow_start.'''
+    print("cutflow: METHOD IS UNFINISHED")
 
 def getboard(rows, cols, n):
     '''Make a board with a specified number of rows, columns, and n flows.
@@ -48,19 +52,34 @@ def getboard(rows, cols, n):
 
     return board
 
-
 def getendpoints(solution):
     '''From a board solution, determine where the endpoints of each flow are.
     Returns a copy of the board, where only endpoints are visible (all other
-    cells are set to 0).'''
+    cells are set to 0). Also, returns a dictionary containing the (row, col)
+    pairs for each endpoint of every flow.'''
     board = deepcopy(solution)
+    n = getnumflows(solution)
+    endpoints = {item:[] for item in range(1, n+1)}
     for i in range(len(board)):
         for j in range(len(board[i])):
             if count_matching_adjacent(solution, i, j) > 1:
                 board[i][j] = 0
+            else:
+                endpoints[board[i][j]] += [[i, j]]
     
-    return board
+    return board, endpoints
 
+def getnumflows(board):
+    '''Given a board with nonzero values to represent unique flows,
+    determine the number of flows on the board.'''
+    return max([max(row) for row in board])
+    
+def resetflow(board, flow, endpoints):
+    '''Erase the specified flow from the board, excluding the endpoints.'''
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if board[i][j] == flow and [i, j] not in endpoints:
+                board[i][j] = 0
 
 def show(board):
     '''Utility function to display board in terminal.'''
@@ -68,3 +87,33 @@ def show(board):
         for j in range(len(board[i])):
             print(f'{board[i][j]:2d}', end=' ')
         print()
+
+def update_from_click(board, row, col, endpoints, flow_start, verbose=True):
+    '''Update the board values based on the user clicking on the cell at
+    a specified row and column.
+    
+    endpoints -> dictionary of lists of endpoints for each flow
+    flow_start -> nonzero values represent current endpoint at which the flow starts'''
+    if board[row][col] == 0:  # do nothing, the user clicked on an empty cell
+        pass
+    elif [row, col] in endpoints[board[row][col]]:  # user clicked on an endpoint
+        if verbose: print(f'You clicked on an endpoint for flow {board[row][col]}')
+        flow = board[row][col]  # which flow are we dealing with
+        resetflow(board, flow, endpoints[flow])
+        flow_start[flow] = [row, col]
+    elif board[row][col] != 0:  # user clicked on the middle of a flow
+        if verbose: print(f'You clicked on the middle of flow {board[row][col]}')
+        cutflow(board, row, col, flow_start)
+
+def zeros(x):
+    '''Utility function to copy a list (or list of lists) and replace all 
+    elements with zero.'''
+    y = deepcopy(x)
+    for i in range(len(y)):
+        if isinstance(y[i], list):
+            for j in range(len(y[i])):
+                y[i][j] = 0
+        else:
+            y[i] = 0
+
+    return y

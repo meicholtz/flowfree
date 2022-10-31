@@ -1,5 +1,5 @@
 # draw.py
-# Helper functions for drawing game elements on the GUI.
+# Helper functions for drawing Flow Free game elements on the GUI.
 
 from params import *
 import pdb
@@ -27,11 +27,10 @@ def endpoints(canvas, board):
                 continue
             
             # Otherwise, draw circle
-            clr = COLORS['flows'][board[i][j]-1]
+            clr = COLORS['flows'][board[i][j]]
             x = (2 * j + 1) * dx // 2
             y = (2 * i + 1) * dy // 2
             canvas.create_oval(x-rx, y-ry, x+rx, y+ry, fill=clr, width=0)
-
 
 def grid(canvas, rows, cols, verbose=False):
     '''Draw lines based on requested grid size (rows, cols).'''
@@ -47,7 +46,7 @@ def grid(canvas, rows, cols, verbose=False):
         y0 = dy * i
         y1 = y0
         if verbose: print(f'Drawing horizontal line from ({x0}, {y0}) to ({x1}, {y1})')
-        canvas.create_line(x0, y0, x1, y1, fill=COLORS['lines'], width=1)
+        canvas.create_line(x0, y0, x1, y1, fill=COLORS['lines'], width=1.25)
 
     # Draw columns
     y0 = 0
@@ -57,5 +56,5 @@ def grid(canvas, rows, cols, verbose=False):
         x0 = dx * i
         x1 = x0
         if verbose: print(f'Drawing vertical line from ({x0}, {y0}) to ({x1}, {y1})')
-        canvas.create_line(x0, y0, x1, y1, fill=COLORS['lines'], width=1)
+        canvas.create_line(x0, y0, x1, y1, fill=COLORS['lines'], width=1.25)
 

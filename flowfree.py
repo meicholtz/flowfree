@@ -2,12 +2,13 @@
 # Play Flow Free in Python!
 
 import argparse
+from copy import deepcopy
 import draw
+import events
 from params import *
 import pdb
 import tkinter as tk
 import utils
-
 
 parser = argparse.ArgumentParser(description="Play Flow Free in Python")
 parser.add_argument('-sz', '--size', type=str,
@@ -17,13 +18,14 @@ parser.add_argument('-n', '--num', type=int,
                     help='number of flows to connect (defaults to smallest grid size)')
 args = parser.parse_args()
 
-
 def play(rows, cols, n):
     '''Play game with grid of size (rows, cols) and n flows.'''
     # Determine which board will be attempted
-    solution = utils.getboard(rows, cols, n)
-    initial_board = utils.getendpoints(solution)
-
+    solution = utils.getboard(rows, cols, n)  # which board are we trying to solve
+    initial_board, endpoints = utils.getendpoints(solution)  # initial state is only endpoints
+    current_board = deepcopy(initial_board)  # current state starts as initial state
+    flow_start = {item:[] for item in endpoints.keys()}  # keep track of the start of each flow
+    
     # Setup game interface
     gui = tk.Tk()
     gui.title("Flow Free")
@@ -39,34 +41,12 @@ def play(rows, cols, n):
     draw.endpoints(canvas, initial_board)
 
     # Add events
-    gui.bind("<Escape>", endgame)
+    gui.bind("<Escape>", events.endgame)
+    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, canvas, current_board, endpoints, flow_start))
 
     # Run the game
     gui.mainloop()
     print('Thanks for playing!')
-
-
-def endgame(event):
-    '''Method to quit the game.'''
-    event.widget.destroy()
-
-
-def guisetup():
-    '''Setup root tkinter window.'''
-    root = tk.Tk()
-    root.title("Flow Free")
-    root.iconbitmap("flowfree.ico")
-    x = (root.winfo_screenwidth() - WIDTH) // 2
-    y = (root.winfo_screenheight() - HEIGHT) // 2
-    root.geometry(f"{WIDTH}x{HEIGHT}+{x}+{y}")  # adjust the size of the window
-    root.resizable(False, False)  # make the window fixed
-
-    canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, background=COLORS['bg'], borderwidth=0)
-    canvas.setvar('stillplaying', True)
-    canvas.pack()
-
-    return root, canvas
-
 
 if __name__ == "__main__":
     rows, cols = [int(i) for i in args.size.split('x')]
