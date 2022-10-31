@@ -36,6 +36,7 @@ def play(rows, cols, n):
 
     # Draw stuff
     draw.grid(canvas, rows, cols)
+    draw.endpoints(canvas, initial_board)
 
     # Add events
     gui.bind("<Escape>", endgame)
