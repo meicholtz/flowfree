@@ -4,6 +4,7 @@
 from params import *
 import pdb
 import tkinter as tk
+import utils
 
 
 def endpoints(canvas, board):
@@ -31,6 +32,37 @@ def endpoints(canvas, board):
             x = (2 * j + 1) * dx // 2
             y = (2 * i + 1) * dy // 2
             canvas.create_oval(x-rx, y-ry, x+rx, y+ry, fill=clr, width=0)
+
+def flows(canvas, board):
+    '''Draw flows on the canvas based on current board state.'''
+    # Extract relevant parameters
+    wid = WIDTH  # canvas.winfo_width()
+    hei = HEIGHT  # canvas.winfo_height()
+    rows = len(board)
+    cols = len(board[0])
+    dx = wid // cols
+    dy = hei // rows
+
+    # Delete any current flows
+    canvas.delete("flow")
+
+    # Draw new flows
+    for i in range(rows):
+        for j in range(cols):
+            # Skip if empty
+            if board[i][j] == 0:
+                continue
+            
+            # Otherwise, draw flow based on adjacent cells
+            clr = COLORS['flows'][board[i][j]]
+            matching = utils.get_matching_adjacent(board, i, j)
+            for row, col in matching:
+                x0 = (2 * j + 1) * dx // 2
+                y0 = (2 * i + 1) * dy // 2
+                x1 = (2 * col + 1) * dx // 2
+                y1 = (2 * row + 1) * dy // 2
+                canvas.create_line(x0, y0, x1, y1, fill=clr, width=6, tags="flow")
+    # pdb.set_trace()
 
 def grid(canvas, rows, cols, verbose=False):
     '''Draw lines based on requested grid size (rows, cols).'''

@@ -1,9 +1,11 @@
 # events.py
 # Event methods for the Flow Free game.
 
+import draw
 from params import *
 import pdb
 import utils
+
 
 def endgame(event):
     '''Method to quit the game.'''
@@ -26,5 +28,5 @@ def mouseclick(event, canvas, current_board, endpoints, flow_start, verbose=Fals
 
     # Update the board values based on what was clicked
     utils.update_from_click(current_board, row, col, endpoints, flow_start)
-    # draw.flows(current_board, flow_start)
+    draw.flows(canvas, current_board)
     # pdb.set_trace()

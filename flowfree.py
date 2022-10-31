@@ -18,6 +18,7 @@ parser.add_argument('-n', '--num', type=int,
                     help='number of flows to connect (defaults to smallest grid size)')
 args = parser.parse_args()
 
+
 def play(rows, cols, n):
     '''Play game with grid of size (rows, cols) and n flows.'''
     # Determine which board will be attempted

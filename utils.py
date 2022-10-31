@@ -5,11 +5,9 @@ from copy import deepcopy
 import pdb
 
 
-def count_matching_adjacent(board, row, col):
-    '''Count the number of adjacent cells on a board that contain the same
-    value as the cell at a specified row and column.
-    
-    Adjacency does not include diagonals.'''
+def get_matching_adjacent(board, row, col):
+    '''Get adjacent cells on a board that contain the same value as the cell
+    at a specified row and column. Adjacency does not include diagonals.'''
     # Extract grid size
     rows = len(board)
     cols = len(board[0])
@@ -18,15 +16,15 @@ def count_matching_adjacent(board, row, col):
     target = board[row][col]
 
     # Check valid adjacent cells
-    matching = 0
+    matching = []
     if row > 0 and board[row-1][col] == target:  # cell above
-        matching += 1
+        matching += [[row, col]]
     if row < rows - 1 and board[row+1][col] == target:  # cell below
-        matching += 1
+        matching += [[row, col]]
     if col > 0 and board[row][col-1] == target:  # cell to the left
-        matching += 1
+        matching += [[row, col]]
     if col < cols - 1 and board[row][col+1] == target:  # cell to the right
-        matching += 1
+        matching += [[row, col]]
     
     return matching
 
@@ -62,7 +60,7 @@ def getendpoints(solution):
     endpoints = {item:[] for item in range(1, n+1)}
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if count_matching_adjacent(solution, i, j) > 1:
+            if len(get_matching_adjacent(solution, i, j)) > 1:
                 board[i][j] = 0
             else:
                 endpoints[board[i][j]] += [[i, j]]
