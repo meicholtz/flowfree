@@ -42,11 +42,12 @@ def flows(canvas, board):
     cols = len(board[0])
     dx = wid // cols
     dy = hei // rows
-
+    
     # Delete any current flows
     canvas.delete("flow")
 
     # Draw new flows
+    utils.show(board)
     for i in range(rows):
         for j in range(cols):
             # Skip if empty
@@ -55,13 +56,14 @@ def flows(canvas, board):
             
             # Otherwise, draw flow based on adjacent cells
             clr = COLORS['flows'][board[i][j]]
+            x0 = (2 * j + 1) * dx // 2
+            y0 = (2 * i + 1) * dy // 2
             matching = utils.get_matching_adjacent(board, i, j)
             for row, col in matching:
-                x0 = (2 * j + 1) * dx // 2
-                y0 = (2 * i + 1) * dy // 2
                 x1 = (2 * col + 1) * dx // 2
                 y1 = (2 * row + 1) * dy // 2
-                canvas.create_line(x0, y0, x1, y1, fill=clr, width=6, tags="flow")
+                canvas.create_line(x0, y0, x1, y1, fill=clr, width=24, tags="flow")
+                canvas.create_oval(x1-11, y1-11, x1+11, y1+11, fill=clr, width=0, tags="flow")
     # pdb.set_trace()
 
 def grid(canvas, rows, cols, verbose=False):

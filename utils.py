@@ -18,13 +18,13 @@ def get_matching_adjacent(board, row, col):
     # Check valid adjacent cells
     matching = []
     if row > 0 and board[row-1][col] == target:  # cell above
-        matching += [[row, col]]
+        matching += [[row-1, col]]
     if row < rows - 1 and board[row+1][col] == target:  # cell below
-        matching += [[row, col]]
+        matching += [[row+1, col]]
     if col > 0 and board[row][col-1] == target:  # cell to the left
-        matching += [[row, col]]
+        matching += [[row, col-1]]
     if col < cols - 1 and board[row][col+1] == target:  # cell to the right
-        matching += [[row, col]]
+        matching += [[row, col+1]]
     
     return matching
 
