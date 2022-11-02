@@ -33,8 +33,8 @@ def cutflow(board, row, col, flow_start):
     Determine how to cut it based on the known flow_start.'''
     print("cutflow: METHOD IS UNFINISHED")
 
-def getboard(rows, cols, n):
-    '''Make a board with a specified number of rows, columns, and n flows.
+def getboard(rows, cols):
+    '''Make a board with a specified number of rows and columns.
     
     NOTES:
     1. Right now, I am hard-coding one board. In the future, this generation 

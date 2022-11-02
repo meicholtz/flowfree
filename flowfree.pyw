@@ -14,15 +14,15 @@ parser = argparse.ArgumentParser(description="Play Flow Free in Python")
 parser.add_argument('-sz', '--size', type=str,
                     help='size of the grid, given as #x# string (defaults to 5x5)',
                     default='5x5')
-parser.add_argument('-n', '--num', type=int,
-                    help='number of flows to connect (defaults to smallest grid size)')
+# parser.add_argument('-n', '--num', type=int,
+#                     help='number of flows to connect (defaults to smallest grid size)')
 args = parser.parse_args()
 
 
-def play(rows, cols, n):
+def play(rows, cols):
     '''Play game with grid of size (rows, cols) and n flows.'''
     # Determine which board will be attempted
-    solution = utils.getboard(rows, cols, n)  # which board are we trying to solve
+    solution = utils.getboard(rows, cols)  # which board are we trying to solve
     initial_board, endpoints = utils.getendpoints(solution)  # initial state is only endpoints
     current_board = deepcopy(initial_board)  # current state starts as initial state
     flow_start = {item:[] for item in endpoints.keys()}  # keep track of the start of each flow
@@ -56,5 +56,5 @@ def play(rows, cols, n):
 
 if __name__ == "__main__":
     rows, cols = [int(i) for i in args.size.split('x')]
-    n = args.num if args.num is not None else min(rows, cols)
-    play(rows, cols, n)
+    # n = args.num if args.num is not None else min(rows, cols)
+    play(rows, cols)
