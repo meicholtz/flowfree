@@ -48,7 +48,7 @@ def mouseclick(event, board, direction, anchors, start, verbose=False):
     else:  # the clicked clicked on the middle of an existing flow
         if verbose: print(f'You clicked on the middle of flow {flow}: ({row},{col})')
         utils.cutflow(board, direction, flow, anchors, start[flow], row, col)
-        draw.flows(canvas, board)
+        draw.flow(canvas, board, flow, start[flow], direction)
 
 def mousedrag(event, board, direction, anchors, start, verbose=False):
     '''Method for handling when the user clicked and dragged the mouse.'''
@@ -85,9 +85,16 @@ def mousedrag(event, board, direction, anchors, start, verbose=False):
         return 0
 
     # Ignore motion if move is not to empty cell or anchor
-    flow = board[r0][c0]
+    flow = canvas.getvar("active_flow")
     if board[row][col] != 0 and [row, col] not in anchors[flow]:
         print(f'flow {flow}, ({row}, {col}), anchors: {anchors[flow]}')
+        canvas.setvar("isclicked", False)
+        canvas.setvar("current_position", None)
+        canvas.setvar("active_flow", None)
+        return 0
+
+    # Ignore motion if flow loops back to starting anchor
+    if [row, col] == start[flow]:
         canvas.setvar("isclicked", False)
         canvas.setvar("current_position", None)
         canvas.setvar("active_flow", None)
@@ -106,9 +113,16 @@ def mousedrag(event, board, direction, anchors, start, verbose=False):
     if verbose: print(f'You moved {direction[r0][c0]} from ({r0},{c0}) to ({row},{col})')
 
     # Update board at new location
-    flow = canvas.getvar("active_flow")
     board[row][col] = flow
     draw.flow(canvas, board, flow, start[flow], direction)
+
+    # Stop tracking if we reached an anchor
+    if [row, col] in anchors[flow]:
+        event.widget.setvar("isclicked", False)
+        event.widget.setvar("current_position", None)
+        event.widget.setvar("active_flow", None)
+        return 0
+
 
 def mouserelease(event, verbose=False):
     '''Method to handle when the mouse button is released.'''
