@@ -50,33 +50,33 @@ def getboard(rows, cols):
 
     return board
 
-def getendpoints(solution):
-    '''From a board solution, determine where the endpoints of each flow are.
-    Returns a copy of the board, where only endpoints are visible (all other
+def getanchors(solution):
+    '''From a board solution, determine where the anchors of each flow are.
+    Returns a copy of the board, where only anchors are visible (all other
     cells are set to 0). Also, returns a dictionary containing the (row, col)
     pairs for each endpoint of every flow.'''
     board = deepcopy(solution)
     n = getnumflows(solution)
-    endpoints = {item:[] for item in range(1, n+1)}
+    anchors = {item:[] for item in range(1, n+1)}
     for i in range(len(board)):
         for j in range(len(board[i])):
             if len(get_matching_adjacent(solution, i, j)) > 1:
                 board[i][j] = 0
             else:
-                endpoints[board[i][j]] += [[i, j]]
+                anchors[board[i][j]] += [[i, j]]
     
-    return board, endpoints
+    return board, anchors
 
 def getnumflows(board):
     '''Given a board with nonzero values to represent unique flows,
     determine the number of flows on the board.'''
     return max([max(row) for row in board])
     
-def resetflow(board, flow, endpoints):
-    '''Erase the specified flow from the board, excluding the endpoints.'''
+def resetflow(board, flow, anchors):
+    '''Erase the specified flow from the board, excluding the anchors.'''
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if board[i][j] == flow and [i, j] not in endpoints:
+            if board[i][j] == flow and [i, j] not in anchors:
                 board[i][j] = 0
 
 def show(board):
@@ -86,18 +86,18 @@ def show(board):
             print(f'{board[i][j]:2d}', end=' ')
         print()
 
-def update_from_click(board, row, col, endpoints, flow_start, verbose=True):
+def update_from_click(board, row, col, anchors, flow_start, verbose=True):
     '''Update the board values based on the user clicking on the cell at
     a specified row and column.
     
-    endpoints -> dictionary of lists of endpoints for each flow
+    anchors -> dictionary of lists of anchors for each flow
     flow_start -> nonzero values represent current endpoint at which the flow starts'''
     if board[row][col] == 0:  # do nothing, the user clicked on an empty cell
         pass
-    elif [row, col] in endpoints[board[row][col]]:  # user clicked on an endpoint
+    elif [row, col] in anchors[board[row][col]]:  # user clicked on an endpoint
         if verbose: print(f'You clicked on an endpoint for flow {board[row][col]}')
         flow = board[row][col]  # which flow are we dealing with
-        resetflow(board, flow, endpoints[flow])
+        resetflow(board, flow, anchors[flow])
         flow_start[flow] = [row, col]
     elif board[row][col] != 0:  # user clicked on the middle of a flow
         if verbose: print(f'You clicked on the middle of flow {board[row][col]}')

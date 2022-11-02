@@ -11,7 +11,7 @@ def endgame(event):
     '''Method to quit the game.'''
     event.widget.destroy()
 
-def mouseclick(event, canvas, board, endpoints, flow_start, verbose=False):
+def mouseclick(event, canvas, board, anchors, flow_start, verbose=False):
     '''Method for handling mouse clicks on the gui canvas.'''
     # Set canvas internal variable
     canvas.setvar("isclicked", True)
@@ -32,7 +32,7 @@ def mouseclick(event, canvas, board, endpoints, flow_start, verbose=False):
     canvas.setvar("active_flow", board[row][col])
 
     # Update the board values based on what was clicked
-    utils.update_from_click(board, row, col, endpoints, flow_start)
+    utils.update_from_click(board, row, col, anchors, flow_start)
     draw.flows(canvas, board)
     # pdb.set_trace()
 

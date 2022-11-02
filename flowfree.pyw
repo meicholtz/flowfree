@@ -23,9 +23,9 @@ def play(rows, cols):
     '''Play game with grid of size (rows, cols) and n flows.'''
     # Determine which board will be attempted
     solution = utils.getboard(rows, cols)  # which board are we trying to solve
-    initial_board, endpoints = utils.getendpoints(solution)  # initial state is only endpoints
+    initial_board, anchors = utils.getanchors(solution)  # initial state is only anchors
     current_board = deepcopy(initial_board)  # current state starts as initial state
-    flow_start = {item:[] for item in endpoints.keys()}  # keep track of the start of each flow
+    flow_start = {item:[] for item in anchors.keys()}  # keep track of the start of each flow
     
     # Setup game interface
     gui = tk.Tk()
@@ -42,11 +42,11 @@ def play(rows, cols):
 
     # Draw stuff
     draw.grid(canvas, rows, cols)
-    draw.endpoints(canvas, initial_board)
+    draw.anchors(canvas, initial_board)
 
     # Add events
     gui.bind("<Escape>", events.endgame)
-    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, canvas, current_board, endpoints, flow_start))
+    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, canvas, current_board, anchors, flow_start, verbose=VERBOSE))
     gui.bind("<Motion>", lambda evt: events.mousedrag(evt, canvas, current_board))
     gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, canvas))
 

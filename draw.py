@@ -7,8 +7,8 @@ import tkinter as tk
 import utils
 
 
-def endpoints(canvas, board):
-    '''Draw circles for endpoints on the input board.
+def anchors(canvas, board):
+    '''Draw circles for anchors on the input board.
     Color is identified by the integer value on the board.'''
     # Extract relevant parameters
     wid = WIDTH  # canvas.winfo_width()
@@ -20,7 +20,7 @@ def endpoints(canvas, board):
     rx = 0.3 * dx  # radius of circle
     ry = 0.3 * dy  # radius of circle
 
-    # Find endpoints on board
+    # Find anchors on board
     for i in range(rows):
         for j in range(cols):
             # Skip if empty
