@@ -38,26 +38,34 @@ def mouseclick(event, canvas, board, endpoints, flow_start, verbose=False):
 
 def mousedrag(event, canvas, board):
     '''Method for handling when the user clicked and dragged the mouse.'''
-    if canvas.getvar("isclicked"):
-        # Extract relevant parameters
-        wid = WIDTH  # canvas.winfo_width()
-        hei = HEIGHT  # canvas.winfo_height()
-        rows = len(board)
-        cols = len(board[0])
-        dx = wid // cols
-        dy = hei // rows
+    # Ignore mouse motion if user did not click
+    if not canvas.getvar("isclicked"):
+        return 0
 
-        # Determine which cell was clicked
-        row = event.y // dy
-        col = event.x // dx
-        
-        if [row, col] != canvas.getvar("current_position"):
-            canvas.setvar("current_position", [row, col])  # update current active cell
+    # Ignore mouse mouse motion if cursor is outside window bounds
+    wid = WIDTH  # canvas.winfo_width()
+    hei = HEIGHT  # canvas.winfo_height()
+    x = event.x
+    y = event.y
+    if x <= 0 or y <= 0 or x >= wid or y >= hei:
+        return 0
 
-            if board[row][col] == 0:
-                board[row][col] = canvas.getvar("active_flow")
-                draw.flows(canvas, board)
-                print(event.x, event.y)
+    print(f'dragging inside window {x} {y}')
+    # Determine which cell was clicked
+    rows = len(board)
+    cols = len(board[0])
+    dx = wid // cols
+    dy = hei // rows
+    row = y // dy
+    col = x // dx
+    
+    if [row, col] != canvas.getvar("current_position"):
+        canvas.setvar("current_position", [row, col])  # update current active cell
+
+        if board[row][col] == 0:
+            board[row][col] = canvas.getvar("active_flow")
+            draw.flows(canvas, board)
+            print(x, y)
 
 def mouserelease(event, canvas, verbose=True):
     '''Method to alert canvas that the mouse button was released.'''
