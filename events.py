@@ -47,7 +47,7 @@ def mouseclick(event, board, anchors, flow_start, verbose=False):
 
     else:  # the clicked clicked on the middle of an existing flow
         if verbose: print(f'You clicked on the middle of flow {flow}: ({row},{col})')
-        utils.cutflow(board, row, col, flow_start)
+        utils.cutflow(board, flow, anchors, flow_start[flow], row, col)
         draw.flows(canvas, board)
 
 def mousedrag(event, canvas, board):

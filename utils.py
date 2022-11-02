@@ -5,6 +5,16 @@ from copy import deepcopy
 import pdb
 
 
+def cutflow(board, flow, anchors, start, row, col):
+    '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
+    Reduced flow should go from the start to the specified row and column.'''
+    print("cutflow is unfinished method")
+    # pdb.set_trace()
+    # for i in range(len(board)):
+    #     for j in range(len(board[i])):
+    #         if board[i][j] == flow and [i, j] not in anchors[flow]:
+    #             board[i][j] = 0
+
 def get_matching_adjacent(board, row, col):
     '''Get adjacent cells on a board that contain the same value as the cell
     at a specified row and column. Adjacency does not include diagonals.'''
@@ -27,12 +37,6 @@ def get_matching_adjacent(board, row, col):
         matching += [[row, col+1]]
     
     return matching
-
-
-def cutflow(board, row, col, flow_start):
-    '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
-    Determine how to cut it based on the known flow_start.'''
-    print("cutflow: METHOD IS UNFINISHED")
 
 def getboard(rows, cols):
     '''Make a board with a specified number of rows and columns.
@@ -68,6 +72,10 @@ def getanchors(solution):
     
     return board, anchors
 
+def getdirection(rows, cols):
+    '''Initialize the direction of a flow for any cell in a grid of size (rows, cols).'''
+    return [['' for j in range(cols)] for i in range(rows)]
+
 def getnumflows(board):
     '''Given a board with nonzero values to represent unique flows,
     determine the number of flows on the board.'''
@@ -86,6 +94,10 @@ def show(board):
         for j in range(len(board[i])):
             print(f'{board[i][j]:2d}', end=' ')
         print()
+
+def traceflow(board, path, previous):
+    '''Trace a flow on the board.'''
+    pass
 
 def update_from_click(board, row, col, anchors, flow_start, verbose=True):
     '''Update the board values based on the user clicking on the cell at

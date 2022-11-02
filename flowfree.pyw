@@ -25,6 +25,7 @@ def play(rows, cols):
     solution = utils.getboard(rows, cols)  # which board are we trying to solve
     initial_board, anchors = utils.getanchors(solution)  # initial state is only anchors
     current_board = deepcopy(initial_board)  # current state starts as initial state
+    current_direction = utils.getdirection(rows, cols)  # initial direction of flows for each cell  
     flow_start = {item:[] for item in anchors.keys()}  # keep track of the start of each flow
     
     # Setup game interface
