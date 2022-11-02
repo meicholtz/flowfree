@@ -2,7 +2,10 @@
 # Utility functions for the Flow Free game.
 
 from copy import deepcopy
+import glob
+import os
 import pdb
+import random
 
 
 def cutflow(board, direction, flow, anchors, start, row, col):
@@ -39,19 +42,29 @@ def get_matching_adjacent(board, row, col):
     return matching
 
 def getboard(rows, cols):
-    '''Make a board with a specified number of rows and columns.
+    '''Get a board with a specified number of rows and columns.
     
-    NOTES:
-    1. Right now, I am hard-coding one board. In the future, this generation 
-    should be pseudorandom perhaps?
-    2. I am assuming the board parameters are reasonable, but may need some
-    error-checking in the future.
+    Currently, this method searches through a data directory to find potential
+    boards that match the requested size (via filenames), then randomly selects
+    a board from the list of matches.
+
+    In the future, it may be desirable to randomly generate a board on the fly.
+
+    TODO: Error checking for inputs that have no matches!
     '''
-    board = [[3, 1, 1, 1, 4],
-            [3, 1, 5, 5, 4],
-            [3, 1, 5, 4, 4],
-            [3, 1, 4, 4, 2],
-            [3, 3, 2, 2, 2]]
+    # Find boards that match size request
+    filenames = glob.glob(os.path.join('data', f'board_{rows}x{cols}*.txt'))
+    
+    # Randomly choose a file from the list
+    file = random.choice(filenames)
+
+    # Read data from file
+    f = open(file, 'r')
+    data = f.read()
+    f.close()
+
+    # Convert data to list of lists
+    board = [[int(c) for c in i] for i in data.split('\n')]
 
     return board
 
