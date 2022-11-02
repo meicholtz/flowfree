@@ -11,12 +11,30 @@ import random
 def cutflow(board, direction, flow, anchors, start, row, col):
     '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
     Reduced flow should go from the start to the specified row and column.'''
-    print("cutflow is unfinished method")
-    # pdb.set_trace()
-    # for i in range(len(board)):
-    #     for j in range(len(board[i])):
-    #         if board[i][j] == flow and [i, j] not in anchors[flow]:
-    #             board[i][j] = 0
+    r0, c0 = row, col  # unpack list
+    whichdirection = direction[r0][c0]
+    while whichdirection != "":
+        # Compute next cell
+        if whichdirection == 'up':
+            r1 = r0 - 1
+            c1 = c0
+        elif whichdirection == 'down':
+            r1 = r0 + 1
+            c1 = c0
+        elif whichdirection == 'left':
+            r1 = r0
+            c1 = c0 - 1
+        elif whichdirection == 'right':
+            r1 = r0
+            c1 = c0 + 1
+        else:
+            print(f'ERROR: Unrecognized direction --> {whichdirection}')
+        
+        direction[r0][c0] = ''
+        if [r0, c0] not in anchors[flow]:
+            board[r0][c0] = 0
+        r0, c0 = r1, c1
+        whichdirection = direction[r0][c0]
 
 def get_matching_adjacent(board, row, col):
     '''Get adjacent cells on a board that contain the same value as the cell
@@ -93,6 +111,33 @@ def getnumflows(board):
     '''Given a board with nonzero values to represent unique flows,
     determine the number of flows on the board.'''
     return max([max(row) for row in board])
+
+def isanchor(x, anchors):
+    '''Determine if a cell x is one of the anchors.'''
+    for i in anchors.values():
+        if x in i:
+            return True
+    return False
+
+def issolved(board, direction, anchors, solution):
+    '''Determine if a board with flow directions matches the solution.'''
+    # Extract grid size
+    rows = len(board)
+    cols = len(board[0])
+
+    # Check board
+    for i in range(rows):
+        for j in range(cols):
+            # Flow in cell does not match solution
+            if board[i][j] != solution[i][j]:
+                return False
+            
+            # Flow does not have direction for all non-anchors
+            if direction[i][j] == "" and not isanchor([i, j], anchors):
+                return False
+    
+    # If we made it this far, the board matches the solution!
+    return True
 
 def resetflow(board, direction, flow, anchors):
     '''Erase the specified flow from the board, excluding the anchors.'''

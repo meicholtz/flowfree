@@ -6,4 +6,4 @@ HEIGHT = 400
 COLORS = {  'background': '#000000',
             'lines': '#5c5c5c',
             'flows': ['', '#ff0000', '#008000', '#0000ff', '#eeee00', '#ffa500']}
-VERBOSE = True  # flag to print extra info at command line for debugging
+VERBOSE = False  # flag to print extra info at command line for debugging

@@ -13,6 +13,10 @@ def endgame(event):
 
 def mouseclick(event, board, direction, anchors, start, verbose=False):
     '''Method for handling mouse clicks on the gui canvas.'''
+    # Only run if board is not solved
+    if event.widget.getvar("solved"):
+        return 0
+
     # Extract relevant parameters
     canvas = event.widget
     wid = WIDTH  # canvas.winfo_width()
@@ -52,6 +56,10 @@ def mouseclick(event, board, direction, anchors, start, verbose=False):
 
 def mousedrag(event, board, direction, anchors, start, verbose=False):
     '''Method for handling when the user clicked and dragged the mouse.'''
+    # Only run if board is not solved
+    if event.widget.getvar("solved"):
+        return 0
+
     # Extract relevant parameters
     canvas = event.widget
     wid = WIDTH  # canvas.winfo_width()
@@ -87,7 +95,7 @@ def mousedrag(event, board, direction, anchors, start, verbose=False):
     # Ignore motion if move is not to empty cell or anchor
     flow = canvas.getvar("active_flow")
     if board[row][col] != 0 and [row, col] not in anchors[flow]:
-        print(f'flow {flow}, ({row}, {col}), anchors: {anchors[flow]}')
+        if verbose: print(f'flow {flow}, ({row}, {col}), anchors: {anchors[flow]}')
         canvas.setvar("isclicked", False)
         canvas.setvar("current_position", None)
         canvas.setvar("active_flow", None)
@@ -124,8 +132,17 @@ def mousedrag(event, board, direction, anchors, start, verbose=False):
         return 0
 
 
-def mouserelease(event, verbose=False):
+def mouserelease(event, board, direction, anchors, solution, verbose=False):
     '''Method to handle when the mouse button is released.'''
+    # Only run if board is not solved
+    if event.widget.getvar("solved"):
+        return 0
+        
+    # Check if board is solved
+    if utils.issolved(board, direction, anchors, solution):
+        print("You solved it!")
+        event.widget.setvar("solved", True)
+
     # if verbose: print("User released mouse")
     event.widget.setvar("isclicked", False)
     event.widget.setvar("current_position", None)

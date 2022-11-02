@@ -39,7 +39,7 @@ def play(rows, cols):
     canvas.pack()
 
     # Add data to canvas
-    canvas.setvar("unsolved", True)  # flag to determine if game is still going
+    canvas.setvar("solved", False)  # flag to determine if game is still going
     canvas.setvar("isclicked", False)  # flag for mouse clicks
     canvas.setvar("current_position", None)  # store location (row, col) of mouse click-and-drag
     canvas.setvar("active_flow", None)  # keep track of flow being edited
@@ -52,7 +52,7 @@ def play(rows, cols):
     gui.bind("<Escape>", events.endgame)
     gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, current_board, current_direction, anchors, flow_start, verbose=VERBOSE))
     gui.bind("<Motion>", lambda evt: events.mousedrag(evt, current_board, current_direction, anchors, flow_start, verbose=VERBOSE))
-    gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, verbose=VERBOSE))
+    gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, current_board, current_direction, anchors, solution, verbose=VERBOSE))
 
     # Run the game
     gui.mainloop()
