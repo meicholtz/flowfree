@@ -49,8 +49,8 @@ def play(rows, cols):
 
     # Add events
     gui.bind("<Escape>", events.endgame)
-    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, current_board, anchors, flow_start, verbose=VERBOSE))
-    gui.bind("<Motion>", lambda evt: events.mousedrag(evt, canvas, current_board))
+    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, current_board, current_direction, anchors, flow_start, verbose=VERBOSE))
+    gui.bind("<Motion>", lambda evt: events.mousedrag(evt, current_board, current_direction, verbose=VERBOSE))
     gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, verbose=VERBOSE))
 
     # Run the game

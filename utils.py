@@ -5,7 +5,7 @@ from copy import deepcopy
 import pdb
 
 
-def cutflow(board, flow, anchors, start, row, col):
+def cutflow(board, direction, flow, anchors, start, row, col):
     '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
     Reduced flow should go from the start to the specified row and column.'''
     print("cutflow is unfinished method")
@@ -81,12 +81,14 @@ def getnumflows(board):
     determine the number of flows on the board.'''
     return max([max(row) for row in board])
 
-def resetflow(board, flow, anchors):
+def resetflow(board, direction, flow, anchors):
     '''Erase the specified flow from the board, excluding the anchors.'''
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if board[i][j] == flow and [i, j] not in anchors[flow]:
-                board[i][j] = 0
+            if board[i][j] == flow:
+                if [i, j] not in anchors[flow]:
+                    board[i][j] = 0  # reset cell (excluding anchors)
+                direction[i][j] = ''  # reset direction (including anchors)
 
 def show(board):
     '''Utility function to display board in terminal.'''
