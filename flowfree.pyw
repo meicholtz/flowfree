@@ -30,7 +30,7 @@ def play(rows, cols):
     # Setup game interface
     gui = tk.Tk()
     gui.title("Flow Free")
-    gui.iconbitmap("flowfree.ico")
+    gui.iconbitmap("circle.ico")
     gui.resizable(False, False)  # make the window fixed
 
     canvas = tk.Canvas(gui, width=WIDTH, height=HEIGHT)
