@@ -28,6 +28,7 @@ def get_matching_adjacent(board, row, col):
     
     return matching
 
+
 def cutflow(board, row, col, flow_start):
     '''Cut a flow when the user selects a cell (row, col) in the middle of the flow.
     Determine how to cut it based on the known flow_start.'''
@@ -71,12 +72,12 @@ def getnumflows(board):
     '''Given a board with nonzero values to represent unique flows,
     determine the number of flows on the board.'''
     return max([max(row) for row in board])
-    
+
 def resetflow(board, flow, anchors):
     '''Erase the specified flow from the board, excluding the anchors.'''
     for i in range(len(board)):
         for j in range(len(board[i])):
-            if board[i][j] == flow and [i, j] not in anchors:
+            if board[i][j] == flow and [i, j] not in anchors[flow]:
                 board[i][j] = 0
 
 def show(board):
@@ -97,7 +98,7 @@ def update_from_click(board, row, col, anchors, flow_start, verbose=True):
     elif [row, col] in anchors[board[row][col]]:  # user clicked on an endpoint
         if verbose: print(f'You clicked on an endpoint for flow {board[row][col]}')
         flow = board[row][col]  # which flow are we dealing with
-        resetflow(board, flow, anchors[flow])
+        resetflow(board, flow, anchors)
         flow_start[flow] = [row, col]
     elif board[row][col] != 0:  # user clicked on the middle of a flow
         if verbose: print(f'You clicked on the middle of flow {board[row][col]}')

@@ -35,20 +35,22 @@ def play(rows, cols):
 
     canvas = tk.Canvas(gui, width=WIDTH, height=HEIGHT)
     canvas.configure(background=COLORS['background'])
+    canvas.pack()
+
+    # Add data to canvas
     canvas.setvar("isclicked", False)  # flag for mouse clicks
     canvas.setvar("current_position", None)  # store location (row, col) of mouse click-and-drag
     canvas.setvar("active_flow", None)  # keep track of flow being edited
-    canvas.pack()
-
+    
     # Draw stuff
     draw.grid(canvas, rows, cols)
     draw.anchors(canvas, initial_board)
 
     # Add events
     gui.bind("<Escape>", events.endgame)
-    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, canvas, current_board, anchors, flow_start, verbose=VERBOSE))
+    gui.bind("<Button-1>", lambda evt: events.mouseclick(evt, current_board, anchors, flow_start, verbose=VERBOSE))
     gui.bind("<Motion>", lambda evt: events.mousedrag(evt, canvas, current_board))
-    gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, canvas))
+    gui.bind("<ButtonRelease-1>", lambda evt: events.mouserelease(evt, verbose=VERBOSE))
 
     # Run the game
     gui.mainloop()

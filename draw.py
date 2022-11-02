@@ -33,7 +33,7 @@ def anchors(canvas, board):
             y = (2 * i + 1) * dy // 2
             canvas.create_oval(x-rx, y-ry, x+rx, y+ry, fill=clr, width=0)
 
-def flows(canvas, board):
+def flows(canvas, board, verbose=False):
     '''Draw flows on the canvas based on current board state.'''
     # Extract relevant parameters
     wid = WIDTH  # canvas.winfo_width()
@@ -47,7 +47,7 @@ def flows(canvas, board):
     canvas.delete("flow")
 
     # Draw new flows
-    utils.show(board)
+    if verbose: utils.show(board)
     for i in range(rows):
         for j in range(cols):
             # Skip if empty

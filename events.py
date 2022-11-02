@@ -11,12 +11,10 @@ def endgame(event):
     '''Method to quit the game.'''
     event.widget.destroy()
 
-def mouseclick(event, canvas, board, anchors, flow_start, verbose=False):
+def mouseclick(event, board, anchors, flow_start, verbose=False):
     '''Method for handling mouse clicks on the gui canvas.'''
-    # Set canvas internal variable
-    canvas.setvar("isclicked", True)
-
     # Extract relevant parameters
+    canvas = event.widget
     wid = WIDTH  # canvas.winfo_width()
     hei = HEIGHT  # canvas.winfo_height()
     rows = len(board)
@@ -27,14 +25,30 @@ def mouseclick(event, canvas, board, anchors, flow_start, verbose=False):
     # Determine which cell was clicked
     row = event.y // dy
     col = event.x // dx
-    if verbose: print(f'You clicked on (row, col) = ({row}, {col})')
-    canvas.setvar("current_position", [row, col])
-    canvas.setvar("active_flow", board[row][col])
 
-    # Update the board values based on what was clicked
-    utils.update_from_click(board, row, col, anchors, flow_start)
-    draw.flows(canvas, board)
-    # pdb.set_trace()
+    # Ignore clicks on empty cells
+    if board[row][col] == 0:
+        return 0
+
+    # Otherwise, determine which flow was clicked
+    flow = board[row][col]
+
+    # Set canvas internal variables
+    canvas.setvar("isclicked", True)
+    canvas.setvar("current_position", [row, col])
+    canvas.setvar("active_flow", flow)
+
+    # There are two cases to consider
+    if [row, col] in anchors[flow]:  # user clicked on an anchor
+        if verbose: print(f'You clicked on an anchor for flow {flow}: ({row},{col})')
+        utils.resetflow(board, flow, anchors)
+        flow_start[flow] = [row, col]
+        draw.flows(canvas, board)
+
+    else:  # the clicked clicked on the middle of an existing flow
+        if verbose: print(f'You clicked on the middle of flow {flow}: ({row},{col})')
+        utils.cutflow(board, row, col, flow_start)
+        draw.flows(canvas, board)
 
 def mousedrag(event, canvas, board):
     '''Method for handling when the user clicked and dragged the mouse.'''
@@ -67,9 +81,9 @@ def mousedrag(event, canvas, board):
             draw.flows(canvas, board)
             print(x, y)
 
-def mouserelease(event, canvas, verbose=True):
-    '''Method to alert canvas that the mouse button was released.'''
+def mouserelease(event, verbose=False):
+    '''Method to handle when the mouse button is released.'''
     if verbose: print("User released mouse")
-    canvas.setvar("isclicked", False)
-    canvas.setvar("current_position", None)
-    canvas.setvar("active_flow", None)
+    event.widget.setvar("isclicked", False)
+    event.widget.setvar("current_position", None)
+    event.widget.setvar("active_flow", None)
