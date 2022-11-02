@@ -11,7 +11,7 @@ def endgame(event):
     '''Method to quit the game.'''
     event.widget.destroy()
 
-def mouseclick(event, board, direction, anchors, flow_start, verbose=False):
+def mouseclick(event, board, direction, anchors, start, verbose=False):
     '''Method for handling mouse clicks on the gui canvas.'''
     # Extract relevant parameters
     canvas = event.widget
@@ -42,15 +42,15 @@ def mouseclick(event, board, direction, anchors, flow_start, verbose=False):
     if [row, col] in anchors[flow]:  # user clicked on an anchor
         if verbose: print(f'You clicked on an anchor for flow {flow}: ({row},{col})')
         utils.resetflow(board, direction, flow, anchors)
-        flow_start[flow] = [row, col]
-        draw.flows(canvas, board)
+        start[flow] = [row, col]
+        draw.flow(canvas, board, flow, start[flow], direction)
 
     else:  # the clicked clicked on the middle of an existing flow
         if verbose: print(f'You clicked on the middle of flow {flow}: ({row},{col})')
-        utils.cutflow(board, direction, flow, anchors, flow_start[flow], row, col)
+        utils.cutflow(board, direction, flow, anchors, start[flow], row, col)
         draw.flows(canvas, board)
 
-def mousedrag(event, board, direction, verbose=False):
+def mousedrag(event, board, direction, anchors, start, verbose=False):
     '''Method for handling when the user clicked and dragged the mouse.'''
     # Extract relevant parameters
     canvas = event.widget
@@ -84,8 +84,10 @@ def mousedrag(event, board, direction, verbose=False):
     if [row, col] == [r0, c0]:
         return 0
 
-    # Ignore motion if move is not to empty cell
-    if board[row][col] != 0:
+    # Ignore motion if move is not to empty cell or anchor
+    flow = board[r0][c0]
+    if board[row][col] != 0 and [row, col] not in anchors[flow]:
+        print(f'flow {flow}, ({row}, {col}), anchors: {anchors[flow]}')
         canvas.setvar("isclicked", False)
         canvas.setvar("current_position", None)
         canvas.setvar("active_flow", None)
@@ -104,9 +106,9 @@ def mousedrag(event, board, direction, verbose=False):
     if verbose: print(f'You moved {direction[r0][c0]} from ({r0},{c0}) to ({row},{col})')
 
     # Update board at new location
-    if board[row][col] == 0:
-        board[row][col] = canvas.getvar("active_flow")
-        draw.flows(canvas, board)
+    flow = canvas.getvar("active_flow")
+    board[row][col] = flow
+    draw.flow(canvas, board, flow, start[flow], direction)
 
 def mouserelease(event, verbose=False):
     '''Method to handle when the mouse button is released.'''

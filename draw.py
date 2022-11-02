@@ -33,6 +33,54 @@ def anchors(canvas, board):
             y = (2 * i + 1) * dy // 2
             canvas.create_oval(x-rx, y-ry, x+rx, y+ry, fill=clr, width=0)
 
+def flow(canvas, board, flow, start, direction):
+    '''Draw flow on the canvas based on start (row, col) and direction (array of moves).'''
+    # Extract relevant parameters
+    wid = WIDTH  # canvas.winfo_width()
+    hei = HEIGHT  # canvas.winfo_height()
+    rows = len(board)
+    cols = len(board[0])
+    dx = wid // cols
+    dy = hei // rows
+
+    # Delete current flow, if it exists
+    tag = f'flow{flow}'  # f-string to label graphical components associated with the current flow
+    canvas.delete(tag)
+
+    # Draw new flow from the start
+    r0, c0 = start  # unpack list
+    whichdirection = direction[r0][c0]
+    while whichdirection != "":
+        # Compute next cell
+        if whichdirection == 'up':
+            r1 = r0 - 1
+            c1 = c0
+        elif whichdirection == 'down':
+            r1 = r0 + 1
+            c1 = c0
+        elif whichdirection == 'left':
+            r1 = r0
+            c1 = c0 - 1
+        elif whichdirection == 'right':
+            r1 = r0
+            c1 = c0 + 1
+        else:
+            print(f'ERROR: Unrecognized direction --> {whichdirection}')
+        
+        # Draw flow segment
+        x0 = (2 * c0 + 1) * dx // 2
+        y0 = (2 * r0 + 1) * dy // 2
+        x1 = (2 * c1 + 1) * dx // 2
+        y1 = (2 * r1 + 1) * dy // 2
+        clr = COLORS['flows'][flow]
+        canvas.create_line(x0, y0, x1, y1, fill=clr, width=24, tags=tag)
+        canvas.create_oval(x1-11, y1-11, x1+11, y1+11, fill=clr, width=0, tags=tag)
+
+        # Move to next cell
+        r0, c0 = r1, c1
+        whichdirection = direction[r0][c0]
+
+
 def flows(canvas, board, verbose=False):
     '''Draw flows on the canvas based on current board state.'''
     # Extract relevant parameters
